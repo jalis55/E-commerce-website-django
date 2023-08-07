@@ -53,5 +53,17 @@ class Profile(models.Model):
     zip_code=models.CharField(max_length=50,blank=True)
     country=models.CharField(max_length=40,blank=True)
     date_joined=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user + "'s profile"
     
+    def fully_filed(self):
+        fields_name=[f.name for f in self._meta.get_fields()]
+        for field in fields_name:
+            value=getattr(self,field)
+            if value is None or value=='':
+                return False
+        return True
+    
+
 
