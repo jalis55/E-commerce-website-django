@@ -20,6 +20,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# custom auth user model
+AUTH_USER_MODEL="App_Login.User"
+
 
 # Application definition
 
@@ -123,6 +126,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # media files
 MEDIA_ROO=[MEDIA_DIR,]
-MEDIA_URL="/media"
+MEDIA_URL="/media/"
 
 LOGIN_URL="/"

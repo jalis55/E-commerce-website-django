@@ -1,7 +1,10 @@
 from django.db import models
 
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 # Create your models here.
@@ -29,10 +32,10 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(email,password,**extra_fields)
 class User(AbstractBaseUser,PermissionsMixin):
     email=models.EmailField(unique=True,null=False)
-    is_staff=models.BooleanField(ugettext_lazy('staff status'),default=False,help_text=("user can login can login this site"))
-    is_active=models.BooleanField(ugettext_lazy('active'),default=True,help_text=ugettext_lazy("user should active.Unselect to make inactive"))
+    is_staff=models.BooleanField(gettext_lazy('staff status'),default=False,help_text=gettext_lazy("user can login can login this site"))
+    is_active=models.BooleanField(gettext_lazy('active'),default=True,help_text=gettext_lazy("user should active.Unselect to make inactive"))
 
-    USERNAME_FIELD=email
+    USERNAME_FIELD='email'
     objects=CustomUserManager()
 
     def __str__(self):
@@ -67,3 +70,11 @@ class Profile(models.Model):
     
 
 
+@receiver(post_save,sender=User)
+def create_profile(sender,instace,created,**kwargs):
+    if created:
+        Profile.objects.create(user=instace)
+
+@receiver(post_save,sender=User)
+def save_profile(sender,instnce,**kwargs):
+    instnce.profile.save()
