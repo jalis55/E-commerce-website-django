@@ -9,27 +9,27 @@ from django.dispatch import receiver
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
-    
-    def _create_user(self,email,password,**extra_fields):
+
+    def create_user(self, email, password, **extra_fields):
         if not email:
-            raise ValueError("Email must be set")
-        
-        email=self.normalize_email(email)
-
-        user=self.model(email,**extra_fields)
+            raise ValueError(_('Users must have an email address'))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
-    def create_superuser(self,email,password,**extra_fields):
-        extra_fields.setdefault("is_staff",True)
-        extra_fields.setdefault("is_superuser",True)
-        extra_fields.setdefault("is_active",True)
+    
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
 
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Must a staff")
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Must be super user")
-        return self._create_user(email,password,**extra_fields)
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+        return self.create_user(email, password, **extra_fields)
+
 class User(AbstractBaseUser,PermissionsMixin):
     email=models.EmailField(unique=True,null=False)
     is_staff=models.BooleanField(gettext_lazy('staff status'),default=False,help_text=gettext_lazy("user can login can login this site"))
@@ -58,7 +58,7 @@ class Profile(models.Model):
     date_joined=models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user + "'s profile"
+        return self.user.email
     
     def fully_filed(self):
         fields_name=[f.name for f in self._meta.get_fields()]
@@ -71,10 +71,10 @@ class Profile(models.Model):
 
 
 @receiver(post_save,sender=User)
-def create_profile(sender,instace,created,**kwargs):
+def create_profile(sender,instance,created,**kwargs):
     if created:
-        Profile.objects.create(user=instace)
+        Profile.objects.create(user=instance)
 
 @receiver(post_save,sender=User)
-def save_profile(sender,instnce,**kwargs):
-    instnce.profile.save()
+def save_profile(sender,instance,**kwargs):
+    instance.profile.save()
