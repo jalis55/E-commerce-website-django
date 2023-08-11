@@ -128,4 +128,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROO=[MEDIA_DIR,]
 MEDIA_URL="/media/"
 
-LOGIN_URL="/"
+LOGIN_URL="/accounts/login"
