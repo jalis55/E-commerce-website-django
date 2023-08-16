@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block body_content %}
+    <!-- Single Starts Here -->
+    <div class="single-product">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="section-heading">
+                <div class="line-dec"></div>
+                <h1>Single Product</h1>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="product-slider">
+                <div id="slider" class="flexslider">
+                  
+                    
+                      <img src="{{object.mini_img.url}}" />
+                    
+
+                    
+                    <!-- items mirrored twice, total of 12 -->
+                  
+                </div>
+
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="right-content">
+                <h4>{{object.name}}</h4>
+                <h6>&#2547;{{object.price}}</h6>
+                <p>Proin commodo, diam a ultricies sagittis, erat odio rhoncus metus, eu feugiat lorem lacus aliquet arcu. Curabitur in gravida nisi, non placerat nibh. Praesent sit amet diam ultrices, commodo turpis id, dignissim leo. Suspendisse mauris massa, porttitor non fermentum vel, ullamcorper scelerisque velit. </p>
+                <span>7 left on stock</span>
+                <form action="" method="get">
+                  <label for="quantity">Quantity:</label>
+                  <input name="quantity" type="quantity" class="quantity-text" id="quantity" 
+                      onfocus="if(this.value == '1') { this.value = ''; }" 
+                      onBlur="if(this.value == '') { this.value = '1';}"
+                      value="1">
+                  <input type="submit" class="button" value="Order Now!">
+                </form>
+                <div class="down-content">
+                  <div class="categories">
+                    <h6>Category:{{object.catergory |upper}} </h6>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Single Page Ends Here -->
+{% endblock %}
